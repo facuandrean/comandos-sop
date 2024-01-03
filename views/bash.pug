@@ -1,0 +1,528 @@
+extends layout 
+
+block content
+    section(class="bash container")
+        h2= title
+        div(class="content")
+            div(class="content-nav none scroll-spy")
+                div
+                    a(href="#shellscript") Shellscript
+                    a(href="#variables") Variables
+                    ul
+                        li
+                            a(href="#variables-creation") Formas de crear variables
+                        li
+                            a(href="#special-variables") Variables especiales
+                        li
+                            a(href="#user-environment-variables") Variables de entorno de usuario
+                        li
+                            a(href="#variable-usage") Uso de variables
+                    a(href="#test") Test
+                    ul
+                        li
+                            a(href="#test-validate-files") Validar archivos
+                        li
+                            a(href="#test-validate-numbers") Validar números
+                        li
+                            a(href="#ways-use-test") Formas de uso
+                    a(href="#control-structures") Estructuras de control
+                    ul
+                        li
+                            a(href="#if-fi-structure") Estructura IF - FI
+                        li
+                            a(href="#case-esac-structure") Estructura CASE - ESAC
+                        li
+                            a(href="#while-loop") Estructura CICLO WHILE
+                        li
+                            a(href="#for-loop") Estructura CICLO FOR
+                    a(href="#arithmetic-operations") Operaciones aritméticas
+                    ul
+                        li
+                            a(href="#arithmetic-operations-let") Usando LET
+                        li
+                            a(href="#arithmetic-operations-expr") Usando EXPR
+                        li
+                            a(href="#arithmetic-operations-simbols") Usando $(())
+                    a(href="#options-menu") Menú de opciones
+            div(class="content-text", loading="lazy")
+                div(class="shellscript")
+                    h3(id="shellscript", class="title") ¿Cómo crear un shellscript?
+                    ol
+                        li Creo un archivo de texto con algún editor: nano, gedit, etc., o incluso touch y después lo abro con un editor. Ejemplo: 
+                            code
+                                b gedit nombre-archivo.sh 
+                            | (es importante marcarlo como .sh)
+
+                        li Necesitamos indicar que el intérprete de este archivo sea Bash. Entonces hay que abrir ese archivo (si es que se hizo con touch) y en la primera línea escribir:
+                            code
+                                b #!/bin/bash
+                        li Luego se escriben distintas sentencias, y se guarda el programa.
+                        li Para ejecutarlo, debemos darle permisos de ejecución, y una forma para hacerlo podría ser: 
+                            code
+                                b chmod +x ./nombre-archivo.sh
+                div(class="variables")
+                    h3(id="variables", class="title") Variables
+                    h4(id="variables-creation", class="title") Formas de creación de variables
+                    ul
+                        li 
+                            u Asignación directa
+                            | : 
+                            code
+                                b nombre_variable=contenido 
+                        li
+                            u Sustitución de comandos
+                            | : el contenido de una variable es la salida de un comando. Hay distintas formas de hacerlo, una de ellas es: 
+                            code
+                                b fecha=`date`
+                            | . Recordar que cuando una variable guarda la salida de un comando, no se actualiza hasta que nosotros lo volvamos a actualizar.        
+                        li
+                            u Comando read
+                            | : lee datos de la entrada (por teclado) y asigna cada campo ingresado (separado por un espacio) a una variable diferente. Ejemplo: Si nosotros ponemos 
+                            code
+                                b read A B C D E
+                            | , el script te va a dejar ingresar por teclado distintos datos; si nosotros ingresamos 
+                            i La flor es bella
+                            | , cada espacio determina el fin del contenido de una variable y se van a asignar respectivamente, es decir, 
+                            i La 
+                            | va a ser el contenido de 
+                            code
+                                b A
+                            | , 
+                            i flor 
+                            | va a ser el contenido de 
+                            code
+                                b B
+                            | , y así sucesivamente. Si hay más variables que datos, se ignoran; y si hay más datos que variables, se ignoran.
+                
+                    h4(id="special-variables", class="title") Variables especiales
+                    ul
+                        li
+                            code
+                                b $?
+                            | : Almacena el estado de salida del último comando ejecutado.
+                        li
+                            code
+                                b $!
+                            | : Contiene el identificador del último proceso que se ejecutó en background.
+                        li
+                            code
+                                b $-
+                            | : Contiene las opciones establecidas mediante el comando set.
+                        li
+                            code
+                                b $$
+                            | : Contiene el identificador del proceso actual.
+                        li
+                            code
+                                b $#
+                            | : Contiene el número de argumentos posicionales pasados al script.
+                        li
+                            code
+                                b $0
+                            | : Nombre del shellscript.
+                        li
+                            code
+                                b $1, $2, $3, ..., $9
+                            | : Posición de cada argumento posicional pasados al script. Ya a partir del 10 se usa entre paréntesis para no confundir 
+                            code
+                                b $(10)
+                            | , 
+                            code
+                                b $(11)
+                            | , etc.
+                        li
+                            code
+                                b $@
+                            | : lista de argumentos posicionales pasados al script.
+
+                    h4(id="user-environment-variables", class="title") Variables de entorno de usuario
+
+                    p Contienen información del entorno del sistema para el usuario que ha iniciado sesión en ese momento.
+
+                    ul
+                        li
+                            code
+                                b HOME
+                            | : directorio de usuario que inició sesión.
+                        li
+                            code
+                                b SHELL
+                            | : ruta absoluta al intérprete de comandos.
+                        li
+                            code
+                                b USER
+                            | : contiene el usuario logeado en la sesión actual.
+                        li
+                            code
+                                b PWD
+                            | : ruta absoluta al directorio de trabajo del usuario.
+                        li
+                            code
+                                b PATH
+                            | : lista de directorios que el shell examina al buscar ejecutables.
+                        li
+                            code
+                                b TERM
+                            | : especifica la terminal por defecto.
+                        li
+                            code
+                                b PS1
+                            | : identificador primario del shell (por defecto $).
+
+                    h4(id="variable-usage", class="title") Uso de variables
+                    p Una vez creada la variable, para usarla le debemos anteponer a su nombre, el símbolo de      
+                        code
+                            b $
+                        | . Por ejemplo:
+                    pre(class="content-code uso-variables")
+                        code
+                        | # Creo la variable con el valor 4 como contenido
+                        | variable1=4
+                        |
+                        | # Uso la variable
+                        | echo "El valor de la variable1 es: " $variable1
+                    p Podemos aplicar el mismo concepto con las variables de entorno de usuario. Por ejemplo:
+                    pre(class="content-code uso-variables")
+                        code
+                        | echo "La ruta absoluta al directorio de trabajo del usuario es: " $PWD   
+
+                div(class="test")
+                    h3(id="test", class="title") Comando test
+                    p Permite comprobar el valor de una expresión/sentencia devolviendo un 0 si la expresión es verdadera o un 1 si la expresión es falsa.
+                
+                    h4(id="test-validate-files", class="title") Test para validar archivos:
+                    pre(class="content-code")
+                        code
+                        | test -bandera nombre-archivo
+                    ul
+                        li
+                            b -e
+                            | : existe el archivo.
+                        li
+                            b -b
+                            | : es especial de bloque.
+                        li
+                            b -c
+                            | : es especial de caracter.
+                        li
+                            b -d
+                            | : es un directorio.
+                        li
+                            b -s
+                            | : su tamaño es mayor que cero.
+                        li
+                            b -f
+                            | : es un archivo regular.
+                        li
+                            b -r
+                            | : existe y el usuario tiene permiso de lectura.
+                        li
+                            b -w
+                            | : existe y el usuario tiene permiso de escritura.
+                        li
+                            b -x
+                            | : existe y el usuario tiene permiso de ejecución.
+
+                    h4(id="test-validate-numbers", class="title") Test para validar números:
+                    pre(class="content-code")
+                        code
+                        | test numero1 operador numero2
+                    ul
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -eq 
+                            | numero2": ambos enteros son iguales
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -ne 
+                            | numero2": ambos enteros son distintos
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -gt 
+                            | numero2": numero1 es mayor a numero2
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -ge 
+                            | numero2": numero1 es mayor o igual a numero2
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -lt 
+                            | numero2": numero1 es menor a numero2
+                        li "
+                            code
+                                b test 
+                            | numero1 
+                            code
+                                b -le 
+                            | numero2": numero1 es menor o igual a numero2
+
+                    h4(id="ways-use-test", class="title") Formas de uso de test.
+                    h5 Se puede usar el comando "
+                        code
+                            b test
+                            | ":
+                    pre(class="content-code")
+                        code
+                        | if test $edad -gt 18; 
+                        | then
+                        |     echo "Eres mayor de edad."
+                        | fi
+                    
+                    h5 Se puede usar "
+                        code
+                            b [ ]
+                            | ":
+                    pre(class="content-code")
+                        code
+                        | if [ $edad -gt 18 ]; 
+                        | then
+                        |    echo "Eres mayor de edad."
+                        | fi
+                    p Notar que test y [ ] se usan para evaluar expresiones condicionales básicas. Son equivalentes pero la forma de los corchetes es más legible.
+
+                    h5 Se puede usar "
+                        code
+                            b [[ ]]
+                            | ":
+                    pre(class="content-code")
+                        code
+                        | if [[ $nombre == "Juan" ]]; 
+                        | then
+                        |     echo "Hola, Juan."
+                        | fi
+                    
+                    p Notar que [[ ]] proporciona funcionalidades adicionales. Es más flexible y puede manejar expresiones más complejas. Se pueden realizar comparaciones de cadenas sin preocuparte por la expansión de comodines.
+                    pre(class="content-code")
+                        code
+                        | if [[ $edad -gt 18 && $ciudad = "Barcelona" ]]; 
+                        | then
+                        |     echo "Mayor de edad y vive en Barcelona."
+                        | fi   
+                div(class="structures")
+                    h3(id="control-structures", class="title") Estructuras de control
+                    h4(id="if-fi-structure", class="title") Estructura IF - FI
+
+                    h5 Estructura simple
+                    pre(class="content-code")
+                        code
+                        | if sentencia
+                        | then
+                        |     # si la sentencia es verdadera se ejecuta lo que haya en then    
+                        |     comando 1
+                        |     comando 2
+                        |     ...
+                        |     comando N
+                        | fi
+        
+                    h5 Estructura doble
+                    pre(class="content-code")
+                        code
+                        | if sentencia
+                        |     then
+                        |         # si la sentencia es verdadera se ejecuta lo que haya en then       
+                        |         comando 1
+                        |         comando 2
+                        |         ...
+                        |         comando N
+                        |     else
+                        |         # si la sentencia es falsa ignora el then y se ejecuta el else      
+                        |         comando 1
+                        |         comando 2
+                        |         ...
+                        |         comando N
+                        | fi
+
+                    h4(id="case-esac-structure", class="title") Estructura CASE - ESAC
+                    pre(class="content-code")
+                        code
+                        | read opcion
+                        | case $opcion in
+                        |     opcion1&#41;
+                        |         echo "Se ejecutan las funcionalidades de la opción 1."
+                        |         ;;
+                        |     opcion2&#41;
+                        |         echo "Se ejecutan las funcionalidades de la opción 2."
+                        |         ;;
+                        |     *&#41;
+                        |         echo "Se ejecuta lo que queremos que pase en caso de que se ingrese una opción no definida anteriormente."      
+                        |         ;;
+                        | esac
+
+                    h4(id="while-loop", class="title") Estructura ciclo while
+                    pre(class="content-code")
+                        code
+                        | while condicion     
+                        | do
+                        |     comando 1
+                        |     comando 2
+                        |     ...
+                        |     comando N
+                        | done
+                    
+
+                    h4(id="for-loop", class="title") Estructura ciclo for
+                    pre(class="content-code")
+                        code
+                        | for variable in lista_argumentos        
+                        | do
+                        |     comando 1
+                        |     comando 2
+                        |     ...
+                        |     comando N
+                        | done
+                
+                div(class="operations")
+                    h3(id="arithmetic-operations", class="title") Operaciones aritméticas
+                    h4(id="arithmetic-operations-let", class="title") Usando la palabra reservada "
+                        code
+                            b let
+                        | "
+                    p Suma, resta, división (cociente y resto) y multiplicación
+                    pre(class="content-code")
+                        code
+                        | # Para sumar:
+                        | let r=2+4
+                        | echo $r
+                        |
+                        | # Para restar:
+                        | let r=8-5
+                        | echo $r
+                        |
+                        | # Para multiplicar:
+                        | let r=2*4
+                        | echo $r
+                        |
+                        | # Para división entera:
+                        | let r=9/4
+                        | echo $r
+                        |
+                        | # Para obtener el resto de la división:     
+                        | let r=9%4
+                        | echo $r
+                        |
+                        | # Para incrementar:
+                        | let r++
+                        | echo $r
+                        |
+                        | # Para decrementar:
+                        | let r--
+                        | echo $r
+                    
+                    p Notar que la división es entera, no arroja resultados decimales.
+
+                    h4(id="arithmetic-operations-expr", class="title") Usando el comando "
+                        code
+                            b expr
+                        | "
+                    p Suma, resta, división (cociente y resto) y multiplicación
+                    pre(class="content-code")
+                        code
+                        | # Para sumar:
+                        | r=`expr 2 + 4`
+                        | echo $r
+                        |
+                        | # Para restar:
+                        | r=`expr 8 - 5`
+                        | echo $r
+                        |
+                        | # Para multiplicar:
+                        | r=`expr 2 \* 4`
+                        | echo $r
+                        |
+                        | # Para división entera:
+                        | r=`expr 9 / 4`
+                        | echo $r
+                        |
+                        | # Para obtener el resto de la división:     
+                        | r=`expr 9 % 4`
+                        | echo $r    
+                        |
+                        | # Para incrementar:
+                        | r=`expr $r + 1`
+                        | echo $r
+                        |
+                        | # Para decrementar:
+                        | r=`expr $r - 1`
+                        | echo $r
+                    
+                    p Notar que hay un espacio entre los operadores y operandos, esto es porque cada uno de ellos es un parámetro para el comando expr.
+
+                    h4(id="arithmetic-operations-simbols", class="title") Usando la construcción "
+                        code
+                            b $(( x op y ))
+                        | "
+                    p Suma, resta, división (cociente y resto) y multiplicación
+                    pre(class="content-code")
+                        code
+                        | # Para sumar:
+                        | r=$((2+4))
+                        | echo $r
+                        |
+                        | # Para restar:
+                        | r=$((8-5))
+                        | echo $r
+                        |
+                        | # Para multiplicar:
+                        | r=$((8*5))
+                        | echo $r
+                        |
+                        | # Para división entera:
+                        | r=$((9/4))
+                        | echo $r
+                        |
+                        | # Para obtener el resto de la división:     
+                        | r=$((9%4))
+                        | echo $r
+                        |
+                        | # Para incrementar:
+                        | ((r++))
+                        | echo $r
+                        |
+                        | # Para decrementar:
+                        | ((r--))
+                        | echo $r
+                    p Notar que no hace falta el espacio entre los operadores y los operandos.
+                
+                div(class="menu-opciones")
+                    h3(id="options-menu", class="title") Menú de opciones
+                    pre(class="content-code")
+                        code
+                        | #!/bin/bash
+                        | while true
+                        | do
+                        |     echo "Menú de opciones:"
+                        |     echo "A&#41; Ejecutar funcionalidad A."
+                        |     echo "B&#41; Ejecutar funcionalidad B."
+                        |     echo "C&#41; Salir."
+                        | 
+                        |     echo -n "Ingrese una opción: "
+                        |     read opcion
+                        |     case $opcion in
+                        |         a|A&#41;
+                        |             # Acá se escribe el contenido de la funcionalidad A.     
+                        |             echo "Ejecutando la funcionalidad A..."
+                        |             ;;
+                        |         b|B&#41;
+                        |             # Acá se escribe el contenido de la funcionalidad B.
+                        |             echo "Ejecutando la funcionalidad B..."
+                        |             ;;
+                        |         c|C&#41;
+                        |             break;;
+                        |     esac
+                        |
+                        | done

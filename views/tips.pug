@@ -1,0 +1,473 @@
+extends layout 
+
+block content 
+    section(class="utilities container")
+
+        h2= title
+
+        p Hay algunos comandos que tienen cierta forma de uso o que brindan cierta información, la cual se tiene que explicar de manera aparte a la anterior.
+
+        div(class="content")
+
+            div(class="content-nav")
+
+                div
+                    a(href="#process") Procesos
+                    ul
+                        li
+                            a(href="#command-ps-e") Comando "ps -l"
+                        li 
+                            a(href="#process-status") Estados de un proceso
+                        li    
+                            a(href="#priorities") Prioridades
+
+                    a(href="#order-lines") Agrupación de comandos
+
+                    ul
+                        li
+                            a(href="#sequential") Secuencial
+                        li
+                            a(href="#conditional") Condicional
+                        li
+                            a(href="#order-group") Grupo de órdenes
+                        li
+                            a(href="#pipelines") Pipelines
+
+                    a(href="#crontab") Crontab
+
+                    a(href="#vmstat") Vmstat
+
+                    ul
+                        li
+                            a(href="#vmstat-form-1") Durante x tiempo cada x tiempo
+                        li
+                            a(href="#vmstat-form-2") x cantidad de veces cada x tiempo
+
+                    a(href="#virtual-disk") Discos virtuales
+                    
+                    ul
+                        li
+                            a(href="#virtual-disk-creation") Crear discos virtuales
+                        li
+                            a(href="#virtual-disk-partitions") Crear particiones
+                        li
+                            a(href="#virtual-disk-losetup") Asociar a un dispositivo de bucle
+                    
+                    a(href="#partition-config") Configurar particiones
+                    ul
+                        li
+                            a(href="#ext3") Sistema EXT3
+                        li
+                            a(href="#ext4") Sistema EXT4
+                        li
+                            a(href="#swap") SWAP
+
+                    a(href="#mount-partitions") Montar particiones
+
+                    a(href="#umount-partitions") Desmontar particiones
+
+            div(class="content-text")
+
+                div(class="process-information")
+
+                    h3(id="process", class="title") Procesos.
+
+                    h4(id="command-ps-e", class="title") Información de los procesos al usar el comando "
+                        code
+                            b ps -e
+                        | ". 
+                    ul 
+                        li 
+                            b F
+                            | : Flags.
+                        li 
+                            b S
+                            | : Estados.
+                        li 
+                            b UID
+                            | : ID del usuario que lanzó el proceso.
+                        li 
+                            b PID
+                            | : ID del proceso.
+                        li 
+                            b PPID
+                            | : ID del proceso padre.
+                        li 
+                            b C
+                            | : Uso del procesador.
+                        li 
+                            b PRI
+                            | : Prioridad.
+                        li 
+                            b NI
+                            | : Cambio de prioridad.
+                        li 
+                            b ADDR
+                            | : Dirección de memoria.
+                        li 
+                            b SZ
+                            | : Tamaño del proceso.
+                        li 
+                            b WCHAN
+                            | : Cambio de contexto.
+                        li 
+                            b TTY
+                            | : Terminal.
+                        li 
+                            b TIME
+                            | : Tiempo.
+                        li 
+                            b CMD
+                            | : Comando.
+                    h4(id="process-status", class="title") Estados de un proceso en linux.
+
+                    table 
+                        tr 
+                            th ID 
+                            th Estado 
+                            th Descripción 
+                        tr 
+                            td S 
+                            td 
+                                i Sleep 
+                            td Suspendido. Con espera interrumpible (esperando que se complete un evento). Puede ser interrumpido por alguna señal.
+                        tr 
+                            td D 
+                            td 
+                                i Sleep 
+                            td Suspendido. Con espera no interrumpible. (Generalmente espeando E/S).
+                        tr 
+                            td T 
+                            td 
+                                i Stopped 
+                            td Detenido. Ha recibido una señal de detención.
+                        tr 
+                            td R 
+                            td 
+                                i Running 
+                            td En ejecución. Solo existe un proceso utilizando la CPU que puede estar en 2 modos: 
+                                br. 
+                                | - 
+                                u Modo user
+                                | : ejecuta instrucciones del programa de usuario.
+                                br. 
+                                | - 
+                                u Modo kernel
+                                | : ejecuta instrucciones del kernel (llamadas al S.O.).
+                        tr 
+                            td Z 
+                            td 
+                                i Zombie 
+                            td El proceso ha terminado pero no está muerto porque su estructura task_struct permanece referenciada desde el vector task. Es un proceso que aún tiene dependencias.
+                        tr 
+                            td X 
+                            td 
+                                i Dead 
+                            td Muerto (nunca debe ser visto).
+                    h4(id="priorities", class="title") Prioridades de procesos.
+                    p - 2 conceptos importantes: la prioridad 
+                        i
+                            b PRI
+                        | , es manejada por el 
+                        u kernel
+                        | , y el valor de 
+                        i 
+                            b   NI 
+                        | (nice), es manejado por el 
+                        u usuario
+                        | .
+                    p - 
+                        b Fórmula de cálculo
+                        | : 
+                        u PRI = 20 + NI  donde NI &#62;= -20 y NI &#60;= 19
+                        | .
+                    p - Mientras más chico el NI, más prioridad va a tener ese proceso.     
+                    p - Podemos ver estas columnas con el comando 
+                        code
+                            b ps -l 
+                        | o 
+                        code
+                            b ps -el
+                        | .
+                    p - Reiteramos: Al valor de PRI lo asigna el kernel al proceso (80 es el estándar), y al valor de NI lo modifica el usuario.
+                div(class="order-lines")
+
+                    h3(id="order-lines", class="title") Agrupación de comandos que se pueden ejecutar en forma:
+
+                    h4(id="sequential", class="title") Secuencial
+                    h5 Se hace con el símbolo: 
+                        b ;
+                    pre(class="content-code")
+                        code
+                        | orden 1; orden 2; orden 3; ...; orden N
+                    
+                    h4(id="conditional", class="title") Condicional
+
+                    h5 Conectivo OR: 
+                        b ||
+                    
+                    pre(class="content-code")
+                        code
+                        | Ej: orden 1 || orden 2 -> mkdir dire1 || echo "No se pudo crear la carpeta dire1"
+
+                    h5 Conectivo AND: 
+                        b &&
+                    pre(class="content-code")
+                        code
+                        | Ej: orden 1 && orden 2 -> si no se ejecuta la primer orden, tampoco la segunda.
+
+                    h4(id="order-group", class="title") Grupo de órdenes
+                    h5 Podemos agrupar órdenes con el símbolo 
+                        b ;
+                        | y con los paréntesis 
+                        b ( )
+                    pre(class="content-code")
+                        code
+                        | (ls /; pwd; who) > listado
+
+                    h4(id="pipelines", class="title") Tuberías o pipelines
+                    h5 Se hace con el símbolo: 
+                        b |
+                    pre(class="content-code")
+                        code
+                        | orden 1 | orden 2 | orden 3 -> la salida de cada orden, se usa o se puede usar en la siguiente.
+                
+                div(class="crontab")
+                    h3(id="crontab", class="title") Forma de usar el comando Crontab.
+                    p El comando crontab permite ejecutar tareas recurrentes.
+                    p Para usarlo, debemos ejecutar en la línea de comandos: 
+                        code
+                            b crontab -e
+                            | .
+                    p Si es la primera vez, podemos elegir un editor para hacer que se abra.
+                    p Una vez abierto, nos permite guardar en un archivo los distintos comandos que queremos que se ejecuten cada cierto tiempo.
+                    p Podemos leer su documentación, pero se resume a esto: 
+                    pre(class="content-code")
+                        code
+                        | parámetro1 parámetro2 parámetro3 parámetro4 parámetro5 comando/s-a-ejecutar
+                    ul
+                        li
+                            u Primer parámetro
+                            | : significa cada cuántos minutos se va a ejecutar. Los valores posibles son 0-59.
+                        li
+                            u Segundo parámetro
+                            | : significa cada cuántas horas se va a ejecutar. Los valores posibles son 0-23.
+                        li 
+                            u Tercer parámetro
+                            | : significa el día del mes en que se va a ejecutar. Los valores posibles son 0-31.
+                        li
+                            u Cuarto parámetro
+                            | : significa el numero del mes del año en que se va a ejecutar. Los valores posibles son 1-12.
+                        li
+                            u Quinto parámetro
+                            | : significa el dia de la semana en que se va a ejecutar. Los valores posibles son 0-7 (siendo 0 y 7 el día domingo).
+                    p Los valores de cada parámetro se pueden reemplazar por un aterisco 
+                        b *
+                        | , el cual significa que se va a ejecutar cada valor de ese rango.
+                    h5 Ejemplo:
+                    pre(class="content-code")
+                        code
+                        | 10 * * * * ps -> la tarea se va a ejecutar a los 10 minutos de cada hora de cualquier día del año.
+                        |
+                        | 10 3 15 * * ls -li -> la tarea se ejecuta a las 3:10 del día 15 de cada mes.
+                        |
+                        | 10 3 * * 1 top -> la tarea se ejecuta a las 3:10 de los días lunes.
+                    h5 Una notación especial para aclarar, es que si agregamos la barra 
+                        b / 
+                        | durante un parámetro, indica que se ejecuta 
+                        b cada 
+                        | cierto tiempo.
+                    pre(class="content-code")
+                        code
+                        |*/10 * * * * ls -l / -> la tarea se ejecuta cada 10 minutos de cada hora, de cada día, etc.
+                    h5 Otra notación especial para aclarar es que si agregamos una 
+                        b coma 
+                        | durante un parámetro, la tarea se ejecuta en esos tiempos. Es como si fuese un "y".
+                    pre(class="content-code")
+                        code
+                        | 0 2,3 * * * ls -l / -> la tarea se ejecuta a las 2 am y a las 3 am (porque el horario es de 24hs).
+                
+                div(class="vmstat")
+                    h3(id="vmstat", class="title") Formas de usar el comando Vmstat
+                    p El comando 
+                        code
+                            b vmstat
+                        | recibe 2 parámetros: el primero es el intervalo de segundos que se va a monitorear (el cada x segundos), y el segundo parámetro es la cantidad de veces a monitorear la memoria.
+                    h4(id="vmstat-form-1", class="title") Monitorear la memoria x cantidad de veces por x tiempo.
+                    p Si queremos monitorear la memoria x cantidad de veces por x tiempo, el primer parámetro es el intervalo en segundos que se va a monitorear y el segundo parámetro es la cantidad de veces a la cual se le debe de restar 1 porque apenas hacemos funcionar el comando vmstat ya se imprime una monitorización.
+                    p Por ejemplo, si queremos monitorear la memoria 5 veces por un intervalo de 2 segundos cada vez, usaríamos el siguiente comando:
+                    pre(class="content-code")
+                        code
+                        | vmstat 2 5
+
+                    h4(id="vmstat-form-2", class="title") Monitorear la memoria durante x tiempo cada x tiempo.
+                    p Si éste es el caso, podemos hacerlo mediante como antes, pero en vez de restar 1 a la cantidad de veces, le debemos sumar 1.
+                    p Supongamos que queremos monitorear la memoria durante 10 segundos, con un intervalo de 3 segundos entre cada muestra. En este caso, el comando sería:
+                    pre(class="content-code")
+                        code
+                        | vmstat 3 4
+                
+                div(class="virtual-disk")
+                    h3(id="virtual-disk", class="title") Discos virtuales
+                    h4(id="virtual-disk-creation", class="title") Pasos para crear un disco virtual
+                    p Aclaración, hay distintas formas de hacerlo, esta es una de ellas...
+                    p Ejecutamos el comando "
+                        code
+                            b dd
+                        | ": 
+                    pre(class="content-code")
+                        code
+                        | dd  if=/dev/zero of=nombre-disco-virtual.img bs=1M count=300
+                    p Explicación
+                    ul
+                        li
+                            b dd
+                            | : Es un comando utilizado para copiar y convertir datos. En este caso, lo estamos utilizando para crear un disco virtual.
+                        li                      
+                            b if=/dev/zero
+                            | : El argumento if (input file) especifica el archivo de entrada. En este caso, estás utilizando /dev/zero, que es un dispositivo especial en Linux que produce una secuencia constante de caracteres nulos (todos los bits en cero). Esto se utiliza para llenar el disco virtual con ceros.
+                        li
+                            b of=nombre-disco-virtual.img
+                            | : El argumento of (output file) especifica el archivo de salida. En este ejemplo, estás creando un archivo llamado nombre-disco-virtual.img que servirá como tu disco virtual.
+                        li
+                            b bs=1M
+                            | : El argumento bs (block size) especifica el tamaño de bloque para la operación de entrada/salida. En este caso, estás utilizando un tamaño de bloque de 1 megabyte.
+                        li
+                            b count=300
+                            | : Este argumento especifica cuántos bloques de tamaño bs se deben copiar desde la entrada al archivo de salida. Sería el espacio del disco virtual. En este ejemplo, estás creando un disco virtual de 300 megabytes, ya que estás copiando 300 bloques de 1 megabyte cada uno.
+                        
+                    h4(id="virtual-disk-partitions", class="title") Crear particiones en disco virtual.
+                    p Para crear particiones en el disco virtual creado, ejecutamos el comando 
+                        code
+                            b fdisk
+                        | .
+                    pre(class="content-code")
+                        code
+                        | fdisk nombre-disco-virtual.img
+                    p Una vez dentro del disco virtual, podemos usar la opción de 
+                        b m
+                        | para ver las distintas opciones posibles en su menú.
+                    p Una de las opciones es 
+                        b n
+                        | , que es la que nos va a dejar crear particiones.
+                    p Si ingresamos  
+                        b n 
+                        | podemos ver que nos va a dejar crear particiones primarias o extendidas, y si creamos una extendida, la próxima va a ser lógica.
+                    p Si queremos crear 
+                        b particiones primarias
+                        | , seguimos el orden del ingreso de datos. Ingresamos 
+                        b p 
+                        | y a partir de ahí nos va a pedir el orden de la partición (1-4), luego el punto de partida de espacio que va a empezar a ocupar esa partición (se pone el numero inicial del rango que muestra la terminal) y luego el espacio que va a ocupar esa partición (+numeroM, ej.: +15M).
+                    p Si queremos crear 
+                        b particiones extendidas
+                        | , seguimos el mismo orden del ingreso de datos. Ingresamos 
+                        b e 
+                        | y a partir de ahí nos va a pedir la misma información. Un dato no menor es que la primera partición extendida debe ocupar un poco más que la suma de las particiones lógicas. Por ejemplo, si se quiere crear dos particiones extendidas, la primera de +20M y la segunda de +40M, su suma sería de +60M. La primera partición extendida se debe crear con un poco más del total de la suma de ambos tamaños, es decir, en vez de +20M, sería +65M para estar tranquilos. Esto es porque si creamos la primera partición extendida de +20M como necesitemos, no nos va a dejar crear la segunda partición lógica de +40M ya que no va a haber un espacio disponible debido a que +20M &#60; +40M.
+                    p Con la opción 
+                        b p 
+                        | en el menú principal de 
+                        code
+                            b fdisk 
+                        | podemos ver las particiones creadas.
+                    p
+                        u No olvidar guardar los cambios 
+                        | en el disco virtual con la opción 
+                        b w 
+                        | antes de salir del menu de 
+                        code
+                            b fdisk
+                            | .
+                    h4(id="virtual-disk-losetup", class="title") Asociar el disco virtual a un dispositivo de bucle
+                    p Una vez que has creado el disco virtual, necesitas asociarlo con un dispositivo de bucle para acceder a sus particiones. Ejecuta el siguiente comando:
+                    pre(class="content-code")
+                        code
+                        | losetup -fP nombre-disco-virtual.img
+                    p Nota: requiere ser super usuario.
+                    p Explicación:
+                    ul
+                        li
+                            b losetup
+                            | : Configura y controla los bucles del kernel de Linux para asociar archivos con dispositivos de bucle.
+                        li
+                            b -f
+                            | : Busca el primer bucle libre disponible.
+                        li
+                            b -P
+                            | : Detecta y configura automáticamente las particiones dentro del bucle.
+                        li
+                            b nombre-disco-virtual.img
+                            | : El nombre del archivo que contiene el disco virtual creado anteriormente.
+                    p Después de ejecutar este comando, podrás acceder a las particiones del disco virtual a través del dispositivo de bucle asociado.
+                
+                div(class="partition-config")
+                    h3(id="partition-config", class="title") Configuración de particiones.
+                    p Para saber el nombre del dispositivo de bucle asociado a la partición del disco virtual podemos ejecutar el comando 
+                        code
+                            b sudo fdisk -l
+                        | .
+
+                    h4(id="ext3", class="title") Crear un sistema de archivos ext3 en una partición.
+                    pre(class="content-code")
+                        code
+                        | mkfs.ext3 /dev/loopXpX 
+                    p Nota: 
+                        b /dev/loopXpX 
+                        | es la partición o el dispositivo que formatearás con el sistema de archivos ext3.
+
+                    h4(id="ext4", class="title") Crear un sistema de archivos ext4 en una partición.
+                    pre(class="content-code")
+                        code
+                        | mkfs.ext4 /dev/loopXpX 
+                    p Nota: 
+                        b /dev/loopXpX 
+                        | es la partición o el dispositivo que formatearás con el sistema de archivos ext4.
+                  
+                    h4(id="swap", class="title") Configurar una partición o archivo como área de intercambio (swap).
+                    pre(class="content-code")
+                        code
+                        | mkswap /dev/loopXpX
+                    p Después de ejecutar 
+                        code
+                            b mkswap
+                        | , generalmente también se ejecuta el comando 
+                        code
+                            b swapon 
+                        | para activar el área de intercambio.
+                    pre(class="content-code")
+                        code
+                        | swapon /dev/loopXpX
+
+                div(class="mount-partitions")
+                    h3(id="mount-partitions", class="title") Montar particiones
+                    p Para montar particiones se hace con el comando 
+                        code
+                            b mount
+                        | .
+                    pre(class="content-code")
+                        code
+                        | mount /dev/loopXpX /ruta/a/donde/se/va/a/montar
+                    p Donde 
+                        code 
+                            b /dev/loopXpX 
+                        | representa la partición que deseas montar, y 
+                        code
+                            b /ruta/a/donde/se/va/a/Montar 
+                        | es la ubicación en la que se montará la partición.
+                    p Nota: para una partición swap, se explicó arriba que se hace con 
+                        code
+                            b swapon
+                        | .
+
+                div(class="umount-partitions")
+                    h3(id="umount-partitions", class="title") Desmontar particiones
+                    p Para desmontar particiones, lo podemos hacer con 
+                        code
+                            b umount
+                        | .
+                    pre(class="content-code")
+                        code
+                        | umount /dev/loopXpX 
+                    p Donde 
+                        code
+                            b /dev/loopXpX 
+                        | es la partición que deseas desmontar.

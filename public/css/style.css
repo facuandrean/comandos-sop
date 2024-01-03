@@ -1,0 +1,610 @@
+/* @import '~@fortawesome/fontawesome-free/css/all.css'; */
+
+/* Custom properties */
+
+:root {
+    /* Colors */
+
+
+    /* Fonts */
+
+    --primary-font: 'Montserrat', sans-serif;
+    --size-font: 16px;
+
+}
+
+/* Reset */
+
+html {
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    font-size: var(--size-font);
+    font-family: var(--primary-font);
+}
+
+*,
+*:after,
+*:before {
+    box-sizing: inherit;
+}
+
+body {
+    overflow-x: hidden;
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+    transition: all .5s ease-out;
+}
+
+a:hover {
+    color: black;
+    opacity: .8;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+input {
+    outline: none;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Utilities */
+
+.container {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1000px;
+    min-width: 375px;
+}
+
+.none {
+    display: none;
+}
+
+.attribution {
+    margin: 5rem 0rem 2rem 0rem;
+    text-align: center;
+    font-size: 16px;
+    color: black;
+}
+
+.attribution a {
+    color: #0a4ccf;
+}
+
+.filter {
+    /* display: none; */
+    visibility: hidden;
+    opacity: 0;
+    order: 1;
+}
+
+.content-nav a.active {
+    color: rgb(255, 255, 255) /* Cambia el color al que prefieras */
+}
+
+/* Site properties */
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: rgb(63, 63, 63);
+}
+
+html::-webkit-scrollbar-track {
+    background: black;
+}
+
+html {
+    background: rgb(45,115,253) !important;
+    background: linear-gradient(0deg, rgba(45,115,253,1) 0%, rgba(34,193,195,1) 100%) !important;
+}
+
+body {
+    width: 100%;
+    min-width: 375px;
+}
+
+.header {
+    width: 100%;
+    height: 8vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.header-logo {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header-logo a {
+    height: 100%;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.header-contact_me {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.header-contact_me a {
+    border: 1px solid black;
+    padding: .2rem .5rem;
+    border-radius: 1rem;
+    height: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.nav {
+    width: 100%;
+    margin-top: 2.5rem;
+}
+
+.nav-ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-a {
+    font-size: 1.25rem;
+    border: 1px solid black;
+    padding: .2rem .5rem;
+    border-radius: 1rem;
+    height: 100%;
+    width: 10ch;
+    font-weight: 500;
+    text-align: center;
+}
+
+.search {
+    margin: 3rem auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.search h1 {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.search h2 {
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.search input[type="search"] {
+    font-size: .9rem;
+    width: 80%;
+    padding: .5rem .1rem;
+    margin: 0 auto;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #0aa7aa;
+}
+
+.search input[type="search"]::placeholder {
+    color: black;
+}
+
+.main {
+    width: 100%;
+    min-height: 0vh; /* Agrega una altura mínima al main para que se expanda */
+    padding: .5rem 1rem;
+    margin-bottom: 10vh;
+}
+
+.command-card {
+    width: 100%;
+    margin-bottom: 1rem;
+    margin: 0 auto 1rem auto;
+}
+
+.command-card:last-child {
+    margin-bottom: 0;
+}
+
+.command-card-title {
+    width:70%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    padding: .5rem 0rem;
+}
+
+.command-card-title h3 {
+    font-weight: 500;
+    width: 100%;
+}
+
+.command-card-title i {
+    width: 100%;
+    transition: all .5s ease;
+}
+
+.command-card-content {
+    width: 100%;
+    visibility: hidden;
+    max-height: 0; /* Agrega esta línea para ocultar el contenido inicialmente */
+    overflow: hidden; /* Oculta el contenido que desborda */
+    transition: all .5s ease;
+}
+
+.command-card-content.active {
+    max-height: 500vh; /* Ajusta la altura máxima para mostrar el contenido */
+    padding: .5rem;
+    visibility: visible;
+}
+
+.command-card-content h4 {
+    margin: 1rem 0rem;
+    font-size: 1.5rem;
+}
+
+.command-card-content p {
+    font-size: 1rem;
+    margin: 1rem 0rem;
+}
+
+.command-card-content li {
+    padding: 1rem 0rem 0rem 0rem;
+}
+
+.command-card-content li:last-child {
+    margin-bottom: 2rem;
+}
+
+hr {
+    border-color: #0a4ccf40;
+}
+
+.bash, .utilities {
+    margin: 10vh auto;
+}
+
+.bash h2, .utilities h2 {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+.utilities p {
+    text-align: center;
+}
+
+.content {
+    width: 100%;
+    margin: 2.5rem auto;
+    display: flex;
+}
+
+.content-nav {
+    width: 25%;
+    height: 100vh;
+    padding: 1rem .5rem;
+    position: sticky;
+    top: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    overflow-y: auto;
+}
+
+.content-nav div > a {
+    display: block;
+    margin-top: .5rem;
+}
+
+.content-nav ul {
+    padding: .5rem 0rem;
+}
+
+.content-nav li {
+    list-style: circle;
+    margin: 0rem 0rem .1rem 1.2rem;
+}
+
+.content-nav::-webkit-scrollbar {
+    width: 10px;
+}
+
+.content-nav::-webkit-scrollbar-thumb {
+    background: rgb(63, 63, 63);
+}
+
+.content-nav::-webkit-scrollbar-track {
+    background: black;
+}
+
+.content-text {
+    width: 100%;
+    height: auto;
+    padding: 0rem 1.5rem;
+}
+
+.content-text p {
+    text-align: left;
+}
+
+.content-text h3 {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+
+.content-text li {
+    list-style: circle;
+    margin: .5rem 0rem .5rem 1.5rem;
+}
+
+.content-text > div {
+    height: auto;
+    margin-bottom: 5rem;
+}
+
+.content-text > div:last-child {
+    margin-bottom: 0;
+}
+
+.content-text h4 {
+    font-weight: 500;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+}
+
+.content-text h5 {
+    font-size: 1.05rem;
+    font-weight: 400;
+}
+
+.variables h3 {
+    margin-bottom: 0;
+}
+
+.content-text code {
+    font-size: 1rem;
+}
+
+.content-text p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.content-code {
+    background-color: rgb(31, 30, 30);
+    color: #fff;
+    overflow-x: auto;
+    border-radius: .5rem;
+    padding: 1rem;
+}
+
+.content-code code {
+    font-size: .8rem;
+}
+
+.content-text h4 code,
+.content-text p code {
+    font-size: 1rem;
+}
+
+.content-code::-webkit-scrollbar{
+    height: 10px;
+}
+
+.content-code::-webkit-scrollbar-thumb {
+    background: rgb(63, 63, 63);
+    border-radius: .5rem;
+
+}
+
+.content-code ::-webkit-scrollbar-track {
+    background: black;
+    border-radius: .5rem;
+}
+
+.utilities > p {
+    margin: 0rem 1rem 
+}
+
+table {
+    width: 100%;
+}
+
+table th {
+    border: 1px solid black;
+    padding: 1rem;
+}
+
+table td {
+    border: 1px solid rgb(63, 63, 63);;
+    padding: 1rem;
+}
+
+.contact_me {
+    margin: 3rem auto;
+    padding: 1rem;
+}
+
+.contact_me form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.contact_me h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+}
+
+.contact_me input {
+    width: 100%;
+    margin-bottom: .5rem;
+    padding: .5rem;
+    background-color: transparent !important;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #0a4ccf;
+}
+
+.contact_me textarea {
+    resize: none;
+    width: 100%;
+    padding: .5rem;
+    margin-bottom: .5rem;
+    background-color: transparent !important;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #0a4ccf;
+}
+
+.contact_me input,
+.contact_me textarea {
+    background-color: transparent !important;
+    -webkit-background-clip: text;
+    background-clip: text;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #0a4ccf;
+}
+
+.contact_me input::placeholder,
+.contact_me textarea::placeholder {
+    color: black;
+}
+
+.contact_me input[type="submit"] {
+    width: 30%;
+    margin-bottom: 0;
+    cursor: pointer;
+    background-color: transparent !important;
+    border: 2px solid #0a4ccf;
+    transition: all .5s ease;
+}
+
+.contact_me input[type="submit"]:hover {
+    opacity: .7;
+}
+
+.btn-up {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    right: 5%;
+    bottom: 5%;
+    border: 1px solid black;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+   
+}
+
+.btn-up i {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mediaqueries */
+
+@media screen and (min-width:768px) {
+    .contact_me input {
+        width: 80%;
+    }
+
+    .contact_me textarea {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width:1024px) {
+    
+    .command-card-title {
+        width: 25%;
+        height: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        cursor: pointer;
+        padding: .5rem 0rem;
+    }
+
+    .shellscript code,
+    .variables code,
+    .test ul code {
+        font-size: 1.15rem;
+    }
+
+    .content-code code {
+        font-size: 1rem;
+    }
+
+    .content-text h4 code,
+    .content-text p code {
+        font-size: 1.15rem;
+    }
+
+
+}
+
+@media screen and (min-width:2560px) {
+    .container {
+        max-width: 1280px;
+    }
+}

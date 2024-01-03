@@ -1,0 +1,53 @@
+doctype html 
+html(lang="es")
+    head
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title= title
+        link(rel="preconnect", href="https://fonts.googleapis.com")
+        link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+        link(href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap", rel="stylesheet")
+        link(rel="icon", href="/img/favicon.png")
+        link(rel="stylesheet", href="/css/normalize.css")
+        link(rel="stylesheet", href="/css/style.css")
+        script(src="https://kit.fontawesome.com/489d45fb25.js", crossorigin="anonymous")
+    body
+        
+        header(class="header container", id="up")
+            div.header-logo
+                a(href="/") SOP - LINUX
+            div.header-contact_me
+                a(href="#contact_me") Notificar error
+
+        nav(class="nav container") 
+            ul(class="nav-ul container") 
+                a.nav-a(href="/")  
+                    li.nav-li Comandos
+                a.nav-a(href="/bash") 
+                    li.nav-li Bash
+                a.nav-a(href="/tips") 
+                    li.nav-li Tips
+
+        block content
+
+        hr.container
+
+        a(href="#up", class="btn-up")
+            i(class="fa-solid fa-up-long fa-xl")
+    
+        section(class="contact_me container", id="contact_me")
+            h2 ¿Hay algún error? ¡Házmelo saber!
+            form(action="https://formsubmit.co/facundoandrean22@gmail.com", method="POST", class="contact_me-form", target="_blank")
+                input(type="text", name="subject", placeholder="¿Añadir o corregir comando?...", title="El asunto es requerido", required)
+                input(type="email", name="email", placeholder="Escribe tu e-mail...", title="E-mail: example@example.com", pattern="^[a-zA-Z0-9\^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", required)
+                textarea(name="comments", cols="2", rows="5", placeholder="Escribe tu idea o corrección...", data-pattern="^.{1,255}$", title="Tu comentario no debe exceder los 255 caracteres", required)
+                input(type="submit", value="Enviar")
+
+        footer.container
+            p.attribution 
+                | Coded by 
+                a(href="https://facuandrean.github.io/portfolio/", target="_blank") Facundo Andrean
+                | .
+        
+        script(src="/js/main.js", type="module")
+    
