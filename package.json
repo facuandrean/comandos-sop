@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "build": "node app.js"
+    "build": "echo 'No build step required for this project'"
   },
   "keywords": [],
   "author": "Facundo Andrean",
