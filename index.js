@@ -8,7 +8,7 @@ import viewController from "./controllers/viewController.js";
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
-const port = process.env.PORT || 222211113333;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(helmet());
